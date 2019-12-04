@@ -10,79 +10,91 @@ endif
 
 include	$(PSL1GHT)/ppu_rules
 
-#---------------------------------------------------------------------------------
-BUILD		:=	build
+
 
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PLATFORM)),)
 #---------------------------------------------------------------------------------
-export BASEDIR	:=	$(CURDIR)
-export DEPS	:=	$(BASEDIR)/deps
-export LIBS	:=	$(BASEDIR)/lib
+export BASEDIR		:= $(CURDIR)
+export DEPS			:= $(BASEDIR)/deps
+export LIBS			:=	$(BASEDIR)/lib
 
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
-export LIBDIR	:=	$(LIBS)/$(PLATFORM)
-export DEPSDIR	:=	$(DEPS)/$(PLATFORM)
+
+export LIBDIR		:= $(LIBS)/$(PLATFORM)
+export DEPSDIR		:=	$(DEPS)/$(PLATFORM)
 
 #---------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------
 
-LIBRARY		:=	libya2d
+TARGET		:=	libya2d
+BUILD		:=	build
+SOURCE		:=	source
+INCLUDE		:=	include
+DATA		:=	data
+LIBS		:=	 
 
-#---------------------------------------------------------------------------------
-DEFINCS		:=	-Iinclude -I$(PORTLIBS)/include/freetype2 -I$(PORTLIBS)/include/  -I$(PORTLIBS)/include/ -I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/rsx -I$(PSL1GHT)/ppu/include/lv2 -I$(PSL1GHT)/ppu/include/sys
-INCLUDES	:=	$(DEFINCS)
+MACHDEP		:= -DBIGENDIAN 
+CFLAGS		+= -O2 -Wall -mcpu=cell $(MACHDEP) -fno-strict-aliasing $(INCLUDES)
 
-CFLAGS		:=	-O2 -mregnames -Wall -mcpu=cell $(MACHDEP) $(INCLUDES) -Wl,-mcell
-CXXFLAGS	:=	$(CFLAGS) 
-SOURCES     := source
+LD			:=	ppu-ld
 
-CFILES		:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.c))
-CPPFILES	:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.cpp))
-sFILES		:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.s))
-SFILES		:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.S))
+ifneq ($(BUILD),$(notdir $(CURDIR)))
 
-CFLAGS		:=	-O2 -mregnames -Wall -mcpu=cell $(MACHDEP) $(INCLUDES) -Wl,-mcell
-CXXFLAGS	:=	$(CFLAGS) 
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export VPATH	:=	$(foreach dir,$(SOURCE),$(CURDIR)/$(dir)) \
+					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+export BUILDDIR	:=	$(CURDIR)/$(BUILD)
+export DEPSDIR	:=	$(BUILDDIR)
 
-#---------------------------------------------------------------------------------
-VPATH		:=	$(BASEDIR)
-
-#---------------------------------------------------------------------------------
-OBJS		:= $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(sFILES:.s=.o) $(SFILES:.S=.o)
+CFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.c)))
+CXXFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.cpp)))
+SFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.S)))
+BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
+VSAFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vsa)))
 
 
-#---------------------------------------------------------------------------------
+export OFILES	:=	$(CFILES:.c=.o) \
+					$(CXXFILES:.cpp=.o) \
+					$(SFILES:.S=.o) \
+					$(BINFILES:.bin=.bin.o) \
+					$(VCGFILES:.vcg=.vcg.o) \
+					$(VSAFILES:.vsa=.vsa.o)
 
-all: lib
+export BINFILES	:=	$(BINFILES:.bin=.bin.h)
+export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)
+export VSAFILES	:=	$(VSAFILES:.vsa=.vsa.h)
 
-lib: $(OBJS)
-	ppu-ar cru $(LIBRARY).a $(OBJS)
-	@echo lib done!
-	
-#---------------------------------------------------------------------------------
-install: lib
-#---------------------------------------------------------------------------------
-	@[ -d $(PORTLIBS)/include/ya2d] || mkdir -p $(PORTLIBS)/include/ya2d
+export INCLUDES	=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
+					-I$(CURDIR)/$(BUILD) -I$(PSL1GHT)/ppu/include -I$(PORTLIBS)/include
+
+.PHONY: $(BUILD) install clean shader
+
+$(BUILD):
+	@[ -d $@ ] || mkdir -p $@
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+install: $(BUILD)
+	@echo Copying...
+	@[ -d $(PORTLIBS)/include/ya2d ] || mkdir -p $(PORTLIBS)/include/ya2d
 	@cp -frv include/*.h $(PORTLIBS)/include/ya2d
-	@cp -frv $(LIBRARY).a $(PORTLIBS)/lib
+	@cp -frv $(TARGET).a $(PORTLIBS)/lib
 	@echo lib installed!
-#---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)
-#---------------------------------------------------------------------------------
-
-.PHONY: lib
-
-#---------------------------------------------------------------------------------
 clean:
-#---------------------------------------------------------------------------------
-	@echo lib cleaned ...
-	@rm -rf $(OBJS)
-	@rm -rf $(LIBRARY).a
-	
-#---------------------------------------------------------------------------------
--include $(DEPSDIR)/*.d
-#---------------------------------------------------------------------------------
+	@echo Clean...
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
+
+else
+
+DEPENDS	:= $(OFILES:.o=.d)
+
+$(OUTPUT).a: $(OFILES)
+$(OFILES): $(BINFILES) $(VCGFILES) $(VSAFILES)
+
+-include $(DEPENDS)
+
+endif

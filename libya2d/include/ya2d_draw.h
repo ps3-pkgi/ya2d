@@ -8,6 +8,9 @@
 #include "ya2d_texture.h"
 #include "ya2d_globals.h"
 
+void ya2d_drawRectZ(int x, int y, int z, int w, int h, u32 color);
+void ya2d_drawFillRectZ(int x, int y, int z, int w, int h, u32 color);
+
 void ya2d_drawRect(int x, int y, int w, int h, u32 color);
 void ya2d_drawFillRect(int x, int y, int w, int h, u32 color);
 

@@ -18,7 +18,7 @@
 int ya2d_init();
 int ya2d_deinit();
 
-inline float ya2d_getFPS();
+//inline float ya2d_getFPS();
 void ya2d_error(char *t);
 
 
