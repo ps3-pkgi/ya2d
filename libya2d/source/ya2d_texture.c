@@ -48,12 +48,6 @@
 		free(swizzledData);
 		texp->isSwizzled = 1;
 	}
-	
-	void ya2d_setTexture(ya2d_Texture *texp)
-	{
-		tiny3d_SetTexture(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, texp->format, TEXTURE_LINEAR);
-		//tiny3d_SetTextureWrap(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, texp->format, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
-	}
 
     void ya2d_freeTexture(ya2d_Texture *texp)
     {
@@ -88,12 +82,7 @@
 			tiny3d_VertexPos(x, y+texp->imageHeight, z);
 			tiny3d_VertexTexture(0.0f, 1.0f);
 		tiny3d_End();
-    }
-     
-    void ya2d_drawTexture(ya2d_Texture *texp, int x, int y)
-    {
-    	ya2d_drawTextureZ(texp, x, y, YA2D_DEFAULT_Z);
-    }
+    }    
 
 	void ya2d_drawRotateTextureZ(ya2d_Texture *texp, int x, int y, int z, float angle)
 	{
@@ -123,12 +112,6 @@
 		tiny3d_SetMatrixModelView(NULL); // Identity
 	}
 
-	void ya2d_drawRotateTexture(ya2d_Texture *texp, int x, int y, float angle)
-	{
-		ya2d_drawRotateTextureZ(texp, x, y, YA2D_DEFAULT_Z, angle);
-	}
-
-
 	void ya2d_drawBlendTextureZ(ya2d_Texture *texp, int x, int y, int z, u32 color)
 	{
 		if(!texp || !texp->data) return;
@@ -150,12 +133,6 @@
 			tiny3d_VertexTexture(0.0f, 1.0f);
 		tiny3d_End();
 	}
-	
-	void ya2d_drawBlendTexture(ya2d_Texture *texp, int x, int y, u32 color)
-	{
-		ya2d_drawBlendTextureZ(texp, x, y, YA2D_DEFAULT_Z, color);
-	}
-
 
 	ya2d_Texture* ya2d_loadPNGfromFile(char* filename)
 	{

@@ -24,13 +24,3 @@ void ya2d_drawFillRectZ(int x, int y, int z, int w, int h, u32 color)
 		tiny3d_VertexPos(x+w, y+h, z);
 	tiny3d_End();
 }
-
-void ya2d_drawRect(int x, int y, int w, int h, u32 color)
-{
-	ya2d_drawRectZ(x, y, YA2D_DEFAULT_Z, w, h, color);
-}
-
-void ya2d_drawFillRect(int x, int y, int w, int h, u32 color)
-{
-	ya2d_drawFillRectZ(x, y, YA2D_DEFAULT_Z, w, h, color);
-}
