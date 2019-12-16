@@ -20,17 +20,15 @@
 extern "C" {
 #endif
 
-#define vrelptr	vGuPointer
-#define vabsptr vCPUPointer
 
 void init_valloc(u64 base_address, u64 size);
 
 size_t vgetMemorySize(unsigned int width, unsigned int height, unsigned int format);
 
 // Return a pointer relative to VRAM Base address useable by GU
-void* vGuPointer( void* ptr );
+void* vrelptr( void* ptr );
 // Return an absolute pointer useable by CPU
-void* vCPUPointer( void* ptr );
+void* vabsptr( void* ptr );
 
 // Returns an absolute pointer useable by CPU
 void* valloc( size_t size );

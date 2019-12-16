@@ -38,8 +38,8 @@ ya2d_Texture* ya2d_loadPNGfromBuffer(void *buffer, u32 buf_size);
 ya2d_Texture* ya2d_loadJPGfromFile(char* filename);
 ya2d_Texture* ya2d_loadJPGfromBuffer(void *buffer, u32 buf_size);
 
-void ya2d_drawTextureZ(ya2d_Texture *texp, int x, int y, int z);
-void ya2d_drawBlendTextureZ(ya2d_Texture *texp, int x, int y, int z, u32 color);
+void ya2d_drawTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale);
+void ya2d_drawBlendTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale, u32 color);
 void ya2d_drawRotateTextureZ(ya2d_Texture *texp, int x, int y, int z, float angle);
 
 inline void ya2d_setTexture(ya2d_Texture *texp)
@@ -47,9 +47,15 @@ inline void ya2d_setTexture(ya2d_Texture *texp)
 	tiny3d_SetTexture(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, texp->format, TEXTURE_LINEAR);
 }
 
+inline void ya2d_setTextureWrap(ya2d_Texture *texp)
+{
+    tiny3d_SetTextureWrap(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, 
+                                             texp->format, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
+}
+
 inline void ya2d_drawTexture(ya2d_Texture *texp, int x, int y)
 {
-	ya2d_drawTextureZ(texp, x, y, YA2D_DEFAULT_Z);
+	ya2d_drawTextureZ(texp, x, y, YA2D_DEFAULT_Z, 1.0f);
 }
 
 inline void ya2d_drawRotateTexture(ya2d_Texture *texp, int x, int y, float angle)
@@ -59,7 +65,7 @@ inline void ya2d_drawRotateTexture(ya2d_Texture *texp, int x, int y, float angle
 
 inline void ya2d_drawBlendTexture(ya2d_Texture *texp, int x, int y, u32 color)
 {
-	ya2d_drawBlendTextureZ(texp, x, y, YA2D_DEFAULT_Z, color);
+	ya2d_drawBlendTextureZ(texp, x, y, YA2D_DEFAULT_Z, 1.0f, color);
 }
 
 void ya2d_freeTexture(ya2d_Texture *texp);

@@ -66,14 +66,14 @@ size_t vgetMemorySize(unsigned int width, unsigned int height, unsigned int form
 	}
 }
 
-inline void* vGuPointer( void *ptr )
+void* vrelptr( void *ptr )
 {
-	return (void*)((u64)ptr & ~VRAM_BASE);
+	return (void*)(ptr - VRAM_BASE);
 }
 
-inline void* vCPUPointer( void *ptr )
+void* vabsptr( void *ptr )
 {
-	return (void*)((u64)ptr | VRAM_BASE);
+	return (void*)(VRAM_BASE + ptr);
 }
 
 /* Find the smallest block that we can allocate AFTER, returning NULL if there
