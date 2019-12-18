@@ -23,6 +23,6 @@
 
 extern u32* ya2d_textureMem;
 extern u32* ya2d_texturePointer;
-extern unsigned char msxfont[];
+extern unsigned char console_font_16x32[16384];
 
 #endif

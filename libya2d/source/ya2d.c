@@ -26,7 +26,7 @@
 			//Load default font
 				ResetFont();
 				ya2d_texturePointer =
-				   (u32 *) AddFontFromBitmapArray((u8 *) msxfont, (u8 *) ya2d_texturePointer,  0, 254,  8,  8, 1, BIT7_FIRST_PIXEL);
+				   (u32 *) AddFontFromBitmapArray((u8 *) console_font_16x32, (u8 *) ya2d_texturePointer, 0, 255, 16, 32, 1, BIT7_FIRST_PIXEL);
 				SetCurrentFont(YA2D_DEFAULT_FONT);
 				SetFontColor(0xffffffff, 0x0);
 				SetFontSize(8, 12);
