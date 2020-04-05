@@ -63,6 +63,17 @@
         }
     }
 
+    void ya2d_setTexture(ya2d_Texture *texp)
+    {
+    	tiny3d_SetTexture(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, texp->format, TEXTURE_LINEAR);
+    }
+
+    void ya2d_setTextureWrap(ya2d_Texture *texp)
+    {
+        tiny3d_SetTextureWrap(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, 
+                                             texp->format, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
+    }
+
     void ya2d_drawTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale)
     {
 		if(!texp || !texp->data) return;
