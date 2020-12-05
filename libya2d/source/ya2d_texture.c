@@ -63,18 +63,18 @@
         }
     }
 
-    void ya2d_setTexture(ya2d_Texture *texp)
+    void ya2d_setTexture(const ya2d_Texture *texp)
     {
     	tiny3d_SetTexture(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, texp->format, TEXTURE_LINEAR);
     }
 
-    void ya2d_setTextureWrap(ya2d_Texture *texp)
+    void ya2d_setTextureWrap(const ya2d_Texture *texp)
     {
         tiny3d_SetTextureWrap(0, texp->textureOffset, texp->imageWidth, texp->imageHeight, texp->rowBytes, 
                                              texp->format, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
     }
 
-    void ya2d_drawTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale)
+    void ya2d_drawTextureZ(const ya2d_Texture *texp, int x, int y, int z, float scale)
     {
 		if(!texp || !texp->data) return;
 
@@ -95,7 +95,7 @@
 		tiny3d_End();
     }    
 
-	void ya2d_drawRotateTextureZ(ya2d_Texture *texp, int x, int y, int z, float angle)
+	void ya2d_drawRotateTextureZ(const ya2d_Texture *texp, int x, int y, int z, float angle)
 	{
 		if(!texp || !texp->data) return;
 
@@ -123,7 +123,7 @@
 		tiny3d_SetMatrixModelView(NULL); // Identity
 	}
 
-	void ya2d_drawBlendTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale, u32 color)
+	void ya2d_drawBlendTextureZ(const ya2d_Texture *texp, int x, int y, int z, float scale, u32 color)
 	{
 		if(!texp || !texp->data) return;
 
@@ -145,7 +145,7 @@
 		tiny3d_End();
 	}
 
-	ya2d_Texture* ya2d_loadPNGfromFile(char* filename)
+	ya2d_Texture* ya2d_loadPNGfromFile(const char* filename)
 	{
 		pngData png;
 		pngLoadFromFile(filename, &png);
@@ -159,7 +159,7 @@
 		return NULL;
 	}
 
-	ya2d_Texture* ya2d_loadPNGfromBuffer(void *buffer, u32 buf_size)
+	ya2d_Texture* ya2d_loadPNGfromBuffer(const void *buffer, u32 buf_size)
 	{
 		pngData png;
 		pngLoadFromBuffer(buffer, buf_size, &png);
@@ -167,13 +167,13 @@
 		{
 			ya2d_Texture *texp = ya2d_createTexture(png.width, png.height, TINY3D_TEX_FORMAT_A8R8G8B8);
 			memcpy(texp->data, png.bmp_out, texp->dataLength);
-			free(png.bmp_out);		
+			free(png.bmp_out);
 			return texp;
 		}
 		return NULL;
 	}
 
-	ya2d_Texture* ya2d_loadJPGfromFile(char* filename)
+	ya2d_Texture* ya2d_loadJPGfromFile(const char* filename)
 	{
 		jpgData jpg;
 		jpgLoadFromFile(filename, &jpg);
@@ -181,13 +181,13 @@
 		{
 			ya2d_Texture *texp = ya2d_createTexture(jpg.width, jpg.height, TINY3D_TEX_FORMAT_A8R8G8B8);
 			memcpy(texp->data, jpg.bmp_out, texp->dataLength);
-			free(jpg.bmp_out);	
+			free(jpg.bmp_out);
 			return texp;
 		}
 		return NULL;
 	}
 
-	ya2d_Texture* ya2d_loadJPGfromBuffer(void *buffer, u32 buf_size)
+	ya2d_Texture* ya2d_loadJPGfromBuffer(const void *buffer, u32 buf_size)
 	{
 		jpgData jpg;
 		jpgLoadFromBuffer(buffer, buf_size, &jpg);
@@ -195,7 +195,7 @@
 		{
 			ya2d_Texture *texp = ya2d_createTexture(jpg.width, jpg.height, TINY3D_TEX_FORMAT_A8R8G8B8);
 			memcpy(texp->data, jpg.bmp_out, texp->dataLength);
-			free(jpg.bmp_out);	
+			free(jpg.bmp_out);
 			return texp;
 		}
 		return NULL;

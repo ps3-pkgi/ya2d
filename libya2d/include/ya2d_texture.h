@@ -19,7 +19,7 @@ typedef struct
 	int imageWidth, imageHeight;
 	int textureWidth, textureHeight;
 	int centerX, centerY;
-    uint32_t rowBytes, dataLength;
+	uint32_t rowBytes, dataLength;
 	void *real_ptr, *data; //data is absolute VRAM pointer
 	int bitDepth, colorType, format;
 	u32 textureOffset;
@@ -29,18 +29,18 @@ typedef struct
 
 ya2d_Texture* ya2d_createTexture(int w, int h, int format);
 void ya2d_swizzleTexture(ya2d_Texture *texp);
-void ya2d_setTexture(ya2d_Texture *texp);
-void ya2d_setTextureWrap(ya2d_Texture *texp);
+void ya2d_setTexture(const ya2d_Texture *texp);
+void ya2d_setTextureWrap(const ya2d_Texture *texp);
 void ya2d_freeTexture(ya2d_Texture *texp);
 
-ya2d_Texture* ya2d_loadPNGfromFile(char* filename);
-ya2d_Texture* ya2d_loadPNGfromBuffer(void *buffer, u32 buf_size);
-ya2d_Texture* ya2d_loadJPGfromFile(char* filename);
-ya2d_Texture* ya2d_loadJPGfromBuffer(void *buffer, u32 buf_size);
+ya2d_Texture* ya2d_loadPNGfromFile(const char* filename);
+ya2d_Texture* ya2d_loadPNGfromBuffer(const void *buffer, u32 buf_size);
+ya2d_Texture* ya2d_loadJPGfromFile(const char* filename);
+ya2d_Texture* ya2d_loadJPGfromBuffer(const void *buffer, u32 buf_size);
 
-void ya2d_drawTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale);
-void ya2d_drawBlendTextureZ(ya2d_Texture *texp, int x, int y, int z, float scale, u32 color);
-void ya2d_drawRotateTextureZ(ya2d_Texture *texp, int x, int y, int z, float angle);
+void ya2d_drawTextureZ(const ya2d_Texture *texp, int x, int y, int z, float scale);
+void ya2d_drawBlendTextureZ(const ya2d_Texture *texp, int x, int y, int z, float scale, u32 color);
+void ya2d_drawRotateTextureZ(const ya2d_Texture *texp, int x, int y, int z, float angle);
 
 #define ya2d_drawTexture(texp, x, y)				ya2d_drawTextureZ(texp, x, y, YA2D_DEFAULT_Z, 1.0f)
 #define ya2d_drawRotateTexture(texp, x, y, angle)	ya2d_drawRotateTextureZ(texp, x, y, YA2D_DEFAULT_Z, angle)
